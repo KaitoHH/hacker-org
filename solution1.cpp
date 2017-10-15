@@ -1,4 +1,4 @@
-// brote-force approch for crossflip solution 
+// brote-force approch for crossflip solution O(2^(n^2)) 
 #include <iostream>
 #include <algorithm>
 #include <set>
