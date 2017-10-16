@@ -1,8 +1,9 @@
 // Gaussian Elimination O(n^6)
 #include <iostream>
 #include <algorithm>
+#include <bitset>
 using namespace std;
-using eqVec = vector<bool>;
+using eqVec = bitset<90000>;
 
 vector<vector<int>>mp;
 vector<eqVec>eq;
@@ -23,16 +24,13 @@ bool inbound(int i, int j)
 void printEQ()
 {
     for(auto vec : eq) {
-        for(auto x : vec) {
-            cout << x << " ";
-        }
-        cout << endl;
+        cout << vec << endl;
     }
 }
 
 void xorTo(int from, int to)
 {
-    transform(eq[from].begin(), eq[from].end(), eq[to].begin(), eq[to].begin(), bit_xor<bool>());
+    eq[to] ^= eq[from];
 }
 
 int main()
@@ -55,7 +53,6 @@ int main()
     for(int i = 0; i < n; i++) {
         for(int j = 0; j < m; j++) {
             eqVec cur;
-            cur.resize(cntx + 1);
             cur[calcIndex(i, j)] = 1;
             if(mp[i][j] == 2) {
                 cur[cntx] = 0;
