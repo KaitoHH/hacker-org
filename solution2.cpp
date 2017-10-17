@@ -1,4 +1,4 @@
-// Gaussian Elimination O(n^6)
+// Gaussian Elimination with bitset optimization and parallel optimization  O(m^2 x n^2)
 #include <iostream>
 #include <algorithm>
 #include "xor_bitset.h"
@@ -93,6 +93,7 @@ int main()
         } else {
             swap(eq[i], eq[target]);
         }
+        #pragma omp parallel for
         for(int j = 0; j < cntx; j++) {
             if(j == i)	continue;
             if(eq[j][i]) {
