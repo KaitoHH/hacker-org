@@ -1,13 +1,13 @@
 // Gaussian Elimination O(n^6)
 #include <iostream>
 #include <algorithm>
-#include <bitset>
+#include "xor_bitset.h"
 using namespace std;
-using eqVec = bitset<90000>;
+using eqVec = xor_bitset<90000>;
 
 vector<vector<int>>mp;
 vector<eqVec>eq;
-int n, m;
+int n, m, cntx;
 int dx[] = {1, -1, 0, 0};
 int dy[] = {0, 0, 1, -1};
 
@@ -24,7 +24,10 @@ bool inbound(int i, int j)
 void printEQ()
 {
     for(auto vec : eq) {
-        cout << vec << endl;
+        for(int i = 0; i < cntx; i++) {
+            cout << vec[i] << " ";
+        }
+        cout << endl;
     }
 }
 
@@ -47,7 +50,7 @@ int main()
         mp.push_back(tempVec);
     }
     m = mp[0].size();
-    int cntx = n * m;
+    cntx = n * m;
 
     // calc bit matrix
     for(int i = 0; i < n; i++) {
