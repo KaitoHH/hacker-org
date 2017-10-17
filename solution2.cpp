@@ -86,13 +86,22 @@ int main()
 
     // Gaussian Elimination
     for(int i = 0; i < cntx; i++) {
-        int target;
-        for(target = i; target < cntx && !eq[target][i] ; target++);
-        if(target >= cntx) {
+        int target = -1;
+
+        #pragma omp parallel for
+        for(int j = i; j < cntx ; j++) {
+            if(~target)    continue;
+            if(eq[j][i]) {
+                target = j;
+            }
+        }
+        
+        if(!~target) {
             eq[i][i] = 1;
         } else {
             swap(eq[i], eq[target]);
         }
+
         #pragma omp parallel for
         for(int j = 0; j < cntx; j++) {
             if(j == i)	continue;
