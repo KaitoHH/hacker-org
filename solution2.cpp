@@ -85,7 +85,7 @@ int main()
 #endif
 
     // Gaussian Elimination
-    for(int i = 0; i < cntx; i++) {
+    for(size_t i = 0; i < cntx; i++) {
         int target = -1;
 
         #pragma omp parallel for
@@ -95,7 +95,11 @@ int main()
                 target = j;
             }
         }
-
+#ifdef DEBUG
+        cout << target << endl;
+        printEQ();
+        cout << endl;
+#endif        
         if(!~target) {
             eqVec extra;
             extra[i] = 1;
@@ -105,7 +109,7 @@ int main()
         swap(eq[i], eq[target]);
 
         #pragma omp parallel for
-        for(int j = 0; j < cntx; j++) {
+        for(size_t j = 0; j < eq.size(); j++) {
             if(j == i)	continue;
             if(eq[j][i]) {
                 xorTo(i, j);
