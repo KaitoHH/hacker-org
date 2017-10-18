@@ -24,7 +24,7 @@ bool inbound(int i, int j)
 void printEQ()
 {
     for(auto vec : eq) {
-        for(int i = 0; i < cntx; i++) {
+        for(int i = 0; i <= cntx; i++) {
             cout << vec[i] << " ";
         }
         cout << endl;
@@ -89,18 +89,20 @@ int main()
         int target = -1;
 
         #pragma omp parallel for
-        for(int j = i; j < cntx ; j++) {
+        for(size_t j = i; j < eq.size() ; j++) {
             if(~target)    continue;
             if(eq[j][i]) {
                 target = j;
             }
         }
-        
+
         if(!~target) {
-            eq[i][i] = 1;
-        } else {
-            swap(eq[i], eq[target]);
+            eqVec extra;
+            extra[i] = 1;
+            eq.push_back(extra);
+            target = eq.size() - 1;
         }
+        swap(eq[i], eq[target]);
 
         #pragma omp parallel for
         for(int j = 0; j < cntx; j++) {
