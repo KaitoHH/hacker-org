@@ -45,7 +45,15 @@ void dfs(vector<int>&path, vector<bool>&vis, bool &flag)
         return;
     }
     int cur = path.back();
+
+    vector<pair<int, int>>vec;
     for(auto x : g[cur]) {
+        vec.emplace_back(g[x].size(), x);
+    }
+    sort(vec.begin(), vec.end());
+
+    for(int i = 0; i < g[cur].size(); i++) {
+        int x = vec[i].second;
         if(!vis[x]) {
             vis[x] = true;
             path.push_back(x);
