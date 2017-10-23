@@ -1,6 +1,6 @@
 #include <iostream>
 #include <set>
-#include <vector>
+#include <algorithm>
 using namespace std;
 const int MAXN = 100;
 using unit = pair<char, char>;
@@ -99,13 +99,21 @@ int main()
     }
 #endif
 
+    pair<int, int>pr[MAXN * MAXN];
+    for(int i = 0; i < cnt; i++) {
+        pr[i].first = g[i].size();
+        pr[i].second = i;
+    }
+    sort(pr, pr + cnt);
+
     for(int i = 0; i < cnt; i++) {
         vector<int>temp;
         vector<bool>vis;
         bool flag = false;
         vis.resize(cnt, false);
-        temp.push_back(i);
-        vis[i] = true;
+        int target = pr[i].second;
+        temp.push_back(target);
+        vis[target] = true;
         dfs(temp, vis, flag);
         if(flag) {
             break;
