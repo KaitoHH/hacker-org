@@ -1,14 +1,16 @@
 #include <iostream>
-#include <set>
 #include <algorithm>
+#include <ctime>
+#include <set>
 using namespace std;
 const int MAXN = 100;
 using unit = pair<char, char>;
 int m, n, cnt;
 unit mp[MAXN][MAXN];
 
-set<int> g[MAXN*MAXN];
-vector<int>ans;
+vector<int> g[MAXN*MAXN];
+set<pair<int, int>>link;
+bool vis[MAXN*MAXN] {0};
 
 bool hasPath(const unit &x, const unit &y)
 {
@@ -17,8 +19,11 @@ bool hasPath(const unit &x, const unit &y)
 
 void addLink(int x, int y)
 {
-    g[x].insert(y);
-    g[y].insert(x);
+    if(link.emplace(x, y).second) {
+        link.emplace(y, x);
+        g[x].push_back(y);
+        g[y].push_back(x);
+    }
 }
 
 void printMap()
@@ -36,36 +41,14 @@ int getIndex(int x, int y)
     return x * m + y;
 }
 
-void dfs(vector<int>&path, vector<bool>&vis, bool &flag)
+int getRand(int maxv)
 {
-    if(flag)    return;
-    if(path.size() == cnt) {
-        flag = true;
-        ans = path;
-        return;
-    }
-    int cur = path.back();
-
-    vector<pair<int, int>>vec;
-    for(auto x : g[cur]) {
-        vec.emplace_back(g[x].size(), x);
-    }
-    sort(vec.begin(), vec.end());
-
-    for(int i = 0; i < g[cur].size(); i++) {
-        int x = vec[i].second;
-        if(!vis[x]) {
-            vis[x] = true;
-            path.push_back(x);
-            dfs(path, vis, flag);
-            vis[x] = false;
-            path.pop_back();
-        }
-    }
+    return rand() % maxv;
 }
 
 int main()
 {
+    srand(time(NULL));
     cin >> n >> m;
     cnt = m * n;
     string str;
@@ -106,30 +89,43 @@ int main()
         }
     }
 #endif
-
-    pair<int, int>pr[MAXN * MAXN];
-    for(int i = 0; i < cnt; i++) {
-        pr[i].first = g[i].size();
-        pr[i].second = i;
-    }
-    sort(pr, pr + cnt);
-
-    for(int i = 0; i < cnt; i++) {
-        vector<int>temp;
-        vector<bool>vis;
-        bool flag = false;
-        vis.resize(cnt, false);
-        int target = pr[i].second;
-        temp.push_back(target);
-        vis[target] = true;
-        dfs(temp, vis, flag);
-        if(flag) {
-            break;
+    vector<int>path;
+    int starting = getRand(cnt);
+    path.push_back(starting);
+    vis[starting] = true;
+    while(path.size() != cnt) {
+        int cur = path.back();
+        vector<int>unvis;
+        for(auto x : g[cur]) {
+            if(!vis[x]) {
+                unvis.push_back(x);
+            }
         }
+        if(!unvis.empty()) {
+            int next = getRand(unvis.size());
+            path.push_back(unvis[next]);
+            vis[unvis[next]] = true;
+        } else {
+            int next = getRand(g[cur].size());
+            for(auto it = path.begin(); it != path.end(); it++) {
+                if(*it == g[cur][next]) {
+                    reverse(it + 1, path.end());
+                    if(it + 2 == path.end()) {
+                        reverse(path.begin(), path.end());
+                    }
+                    break;
+                }
+            }
+        }
+#ifdef DEBUG
+        cout << "path:" << endl;
+        for(auto x : path) cout << x << " ";
+        cout << endl;
+#endif
     }
 
     bool first = true;
-    for(auto x : ans) {
+    for(auto x : path) {
         int xx = x / m;
         int yy = x % m;
         if(first) {
