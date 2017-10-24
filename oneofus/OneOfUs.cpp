@@ -2,8 +2,9 @@
 #include <algorithm>
 #include <ctime>
 #include <set>
+#include <cstring>
 using namespace std;
-const int MAXN = 100;
+const int MAXN = 110;
 using unit = pair<string, string>;
 int m, n, cnt;
 unit mp[MAXN][MAXN];
@@ -101,38 +102,45 @@ int main()
     }
 #endif
     vector<int>path;
-    int starting = getRand(cnt);
-    path.push_back(starting);
-    vis[starting] = true;
-    while(path.size() != cnt) {
-        int cur = path.back();
-        vector<int>unvis;
-        for(auto x : g[cur]) {
-            if(!vis[x]) {
-                unvis.push_back(x);
-            }
-        }
-        if(!unvis.empty()) {
-            int next = getRand(unvis.size());
-            path.push_back(unvis[next]);
-            vis[unvis[next]] = true;
-        } else {
-            int next = getRand(g[cur].size());
-            for(auto it = path.begin(); it != path.end(); it++) {
-                if(*it == g[cur][next]) {
-                    reverse(it + 1, path.end());
-                    if(it + 2 == path.end()) {
-                        reverse(path.begin(), path.end());
-                    }
-                    break;
+    while (path.size() != cnt) {
+        path.clear();
+        memset(vis, 0, sizeof(vis));
+        int starting = getRand(cnt);
+        path.push_back(starting);
+        vis[starting] = true;
+        int step = 0;
+        while(path.size() != cnt && step < cnt) {
+            int cur = path.back();
+            vector<int>unvis;
+            for(auto x : g[cur]) {
+                if(!vis[x]) {
+                    unvis.push_back(x);
                 }
             }
-        }
+            if(!unvis.empty()) {
+                int next = getRand(unvis.size());
+                path.push_back(unvis[next]);
+                vis[unvis[next]] = true;
+                step = 0;
+            } else {
+                int next = getRand(g[cur].size());
+                for(auto it = path.begin(); it != path.end(); it++) {
+                    if(*it == g[cur][next]) {
+                        reverse(it + 1, path.end());
+                        if(it + 2 == path.end()) {
+                            reverse(path.begin(), path.end());
+                        }
+                        break;
+                    }
+                }
+                step++;
+            }
 #ifdef DEBUG
-        cout << "path:" << endl;
-        for(auto x : path) cout << x << " ";
-        cout << endl;
+            cout << "path:" << endl;
+            for(auto x : path) cout << x << " ";
+            cout << endl;
 #endif
+        }
     }
 
     bool first = true;
