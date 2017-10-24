@@ -4,7 +4,7 @@
 #include <set>
 using namespace std;
 const int MAXN = 100;
-using unit = pair<char, char>;
+using unit = pair<string, string>;
 int m, n, cnt;
 unit mp[MAXN][MAXN];
 
@@ -53,10 +53,21 @@ int main()
     cnt = m * n;
     string str;
     cin >> str;
-    for(int i = 0, cur = 0; i < n; i++) {
-        for(int j = 0; j < m; j++) {
-            mp[i][j].first = str[cur++];
-            mp[i][j].second = str[cur++];
+    if(str.length() == m * n * 2) {
+        for(int i = 0, cur = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                mp[i][j].first = str[cur++];
+                mp[i][j].second = str[cur++];
+            }
+        }
+    } else {
+        for(int i = 0, cur = 0; i < n; i++) {
+            for(int j = 0; j < m; j++) {
+                mp[i][j].first = str[cur++];
+                mp[i][j].first += str[cur++];
+                mp[i][j].second = str[cur++];
+                mp[i][j].second += str[cur++];
+            }
         }
     }
     for(int i = 0; i < n ; i++) {
