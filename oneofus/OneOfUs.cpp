@@ -133,7 +133,7 @@ int main()
         } else {
             cout << "_";
         }
-        cout << yy << "," << xx;
+        cout << hex << yy << "," << xx;
     }
     cout << endl;
     return 0;
