@@ -3,6 +3,7 @@
 #include <ctime>
 #include <set>
 #include <cstring>
+#include <vector>
 using namespace std;
 const int MAXN = 110;
 using unit = pair<string, string>;
@@ -123,6 +124,7 @@ int main()
                 vis[unvis[next]] = true;
                 step = 0;
             } else {
+                // rotate
                 int next = getRand(g[cur].size());
                 for(auto it = path.begin(); it != path.end(); it++) {
                     if(*it == g[cur][next]) {
@@ -133,13 +135,9 @@ int main()
                         break;
                     }
                 }
+                // retry if failed
                 step++;
             }
-#ifdef DEBUG
-            cout << "path:" << endl;
-            for(auto x : path) cout << x << " ";
-            cout << endl;
-#endif
         }
     }
 
@@ -157,4 +155,3 @@ int main()
     cout << endl;
     return 0;
 }
-
